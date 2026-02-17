@@ -1,0 +1,82 @@
+---
+import type { PaginationResult } from "../helper/pagination";
+
+interface Props {
+  pagination: PaginationResult;
+}
+
+const { pagination } = Astro.props;
+---
+
+{
+  pagination.totalPages > 1 && (
+    <nav class="d-flex justify-content-start mt-3" aria-label="Pagination">
+      <ul
+        class="pagination mb-0 flex-nowrap"
+        style="white-space:nowrap;min-width:max-content;"
+      >
+        <li class={`page-item${pagination.page === 1 ? " disabled" : ""}`}>
+          <a
+            class="page-link"
+            href={pagination.firstHref ?? "#"}
+            aria-disabled={pagination.page === 1 ? "true" : "false"}
+          >
+            «
+          </a>
+        </li>
+
+        <li class={`page-item${pagination.prevHref ? "" : " disabled"}`}>
+          <a
+            class="page-link"
+            href={pagination.prevHref ?? "#"}
+            aria-disabled={pagination.prevHref ? "false" : "true"}
+          >
+            ‹
+          </a>
+        </li>
+
+        {pagination.pages.map((p) => (
+          <li class={`page-item${p === pagination.page ? " active" : ""}`}>
+            {p !== null ? (
+              <a class="page-link" href={pagination.linkFor(p)}>
+                {p}
+              </a>
+            ) : (
+              <span
+                class="page-link text-muted"
+                aria-hidden="true"
+                style="pointer-events:none;cursor:default;"
+              >
+                &hellip;
+              </span>
+            )}
+          </li>
+        ))}
+
+        <li class={`page-item${pagination.nextHref ? "" : " disabled"}`}>
+          <a
+            class="page-link"
+            href={pagination.nextHref ?? "#"}
+            aria-disabled={pagination.nextHref ? "false" : "true"}
+          >
+            ›
+          </a>
+        </li>
+
+        <li
+          class={`page-item${pagination.page === pagination.totalPages ? " disabled" : ""}`}
+        >
+          <a
+            class="page-link"
+            href={pagination.lastHref ?? "#"}
+            aria-disabled={
+              pagination.page === pagination.totalPages ? "true" : "false"
+            }
+          >
+            »
+          </a>
+        </li>
+      </ul>
+    </nav>
+  )
+}
