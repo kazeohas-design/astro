@@ -1,10 +1,13 @@
 FROM node:20-alpine
-
 WORKDIR /usr/src/app
 
-COPY . .
+# Copy package files first for better caching
+COPY amal/package*.json ./
+RUN npm install
 
-RUN npm ci || npm install
+# Copy the rest of the app
+COPY amal/ ./
+
 RUN npm run build
 
 EXPOSE 3000
