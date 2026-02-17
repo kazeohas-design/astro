@@ -1,14 +1,17 @@
 FROM node:20-alpine
-WORKDIR /usr/src/app
 
-# Copy package files first for better caching
-COPY amal/package*.json ./
+WORKDIR /app
+
+COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the app
-COPY amal/ ./
+COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
-CMD ["npm","run","preview","--","--host","0.0.0.0","--port","4322"]
+EXPOSE 4322
+
+ENV HOST=0.0.0.0
+ENV PORT=4322
+
+CMD ["node", "dist/server/entry.mjs"]
